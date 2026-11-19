@@ -6,6 +6,7 @@
   "types": "index.d.ts",
   "scripts": {
     "build": "babel src --out-dir lib",
+    "test": "npm run build && node test/extensions.js",
     "build-demo": "webpack demo/demo.js -o demo/demo.build.js --mode=\"none\""
   },
   "repository": {

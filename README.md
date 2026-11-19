@@ -95,6 +95,22 @@ _Transparency:_
 
 If a `transparentIndex` is defined for a frame, it means that any pixel within the pixel data that matches this index should not be drawn. When drawing the patch using canvas, this means setting the alpha value for this pixel to `0`.
 
+_Extension Blocks & Metadata:_
+
+The `frames` array returned by `parseGIF()` contains every block of the file in stable file order — not just images. Graphic control (`gce`), application (`application`), comment (`comment`) and plain text (`text`) extensions are parsed into dedicated structures, and any other extension label is preserved verbatim as an `extension` block holding its raw label (`codes`) and concatenated sub-block data (`blocks`). Repeated blocks of any type each get their own entry, so nothing is overwritten, and unknown extensions never truncate the rest of the parse. This makes the parse result suitable for editor-style pass-through of metadata:
+
+```js
+{
+    // an extension label without a dedicated parser, preserved raw
+    extension: {
+        codes: [0x21, 0xce], // introducer + label
+        blocks: [...]        // concatenated sub-block data
+    }
+}
+```
+
+`decompressFrames()` is unaffected by extension blocks — it still returns only the image frames.
+
 ### Drawing the GIF
 
 Check out the **[demo][4]** for an example of how to draw/manipulate a gif using this library. We wanted the library to be drawing agnostic to allow users to do what they wish with the raw gif data, rather than impose a method that has to be altered. On this note however, we provide an easy interface for creating commonly used canvas pixel data for drawing ease.

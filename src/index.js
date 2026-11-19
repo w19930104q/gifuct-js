@@ -1,4 +1,4 @@
-import GIF from 'js-binary-schema-parser/lib/schemas/gif'
+import GIF from './schema'
 import { parse } from 'js-binary-schema-parser'
 import { buildStream } from 'js-binary-schema-parser/lib/parsers/uint8'
 import { deinterlace } from './deinterlace'

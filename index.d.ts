@@ -7,6 +7,32 @@ type Application = {
   }
 }
 
+type Comment = {
+  comment: {
+    codes: number[]
+    blocks: number[]
+  }
+}
+
+type PlainText = {
+  text: {
+    codes: number[]
+    blockSize: number
+    preData: number[]
+    blocks: number[]
+  }
+}
+
+// any extension label without a dedicated schema (0x21 introducer):
+// the raw label and concatenated sub-block data are preserved verbatim
+// so unknown metadata can be passed through (e.g. by editors)
+type UnknownExtension = {
+  extension: {
+    codes: number[]
+    blocks: number[]
+  }
+}
+
 type Frame = {
   gce: {
     byteSize: number
@@ -44,7 +70,9 @@ type Frame = {
 }
 
 export type ParsedGif = {
-  frames: (Application | Frame)[]
+  // every block of the file, in stable file order; repeated blocks of any
+  // type each get their own entry, and consecutive blocks may share an entry
+  frames: (Application | Comment | PlainText | UnknownExtension | Frame)[]
   gct: [number, number, number][]
   header: {
     signature: string
